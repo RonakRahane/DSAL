@@ -1,0 +1,115 @@
+#include<iostream>	
+using namespace std;
+
+class Hash_table {
+public:
+   int key;
+   long int tel;
+};
+
+class Hashing {
+   Hash_table t[10];
+public:
+   Hashing() {
+       for (int i = 0; i < 10; i++) {
+           t[i].key = i;
+           t[i].tel = -1;
+       }
+   }
+
+   void insert(int probe_choice);
+   int search(long int tel);
+   void display();
+   int Linear_probing(int position);
+   int Quadratic_probing(int position);
+};
+
+void Hashing::insert(int probe_choice) {
+   int temp, position;
+   cout << "Enter the mobile number: ";
+   cin >> temp;
+   position = temp % 10;
+   if (t[position].tel == -1) {
+       t[position].tel = temp;
+   } else if (probe_choice == 1) {
+       int collision_position = position;
+       int temp_position = Linear_probing(collision_position);
+       t[temp_position].tel = temp;
+   } else if (probe_choice == 2) {
+       int collision_position = position;
+       int temp_position = Quadratic_probing(collision_position);
+       t[temp_position].tel = temp;
+   }
+}
+
+int Hashing::Linear_probing(int position) {
+   for (int i = 0; i < 10; i++) {
+       if (t[i].tel == -1)
+           return i;
+       else if (i == 9)
+           return -1;
+   }
+}
+
+int Hashing::Quadratic_probing(int position) {
+   for (int i = 0; i < 10; i++) {
+       if (t[i].tel == -1)
+           return i;
+       else if (i == 9)
+           return -1;
+   }
+}
+
+int Hashing::search(long int tel) {
+   for (int i = 0; i < 10; i++) {
+       if (t[i].tel == tel)
+           return i; // Return the position if found
+   }
+   return -1; // Return -1 if not found
+}
+
+void Hashing::display() {
+   for (int i = 0; i < 10; i++) {
+       cout << t[i].key << " \t" << t[i].tel << "\n";
+   }
+}
+
+int main() {
+   Hashing obj, h1;
+   int ch, probe_choice;
+   long int search_tel;
+   do {
+       cout << "\n-----Menu----" << endl;
+       cout << "\n1. Insert" << endl;
+       cout << "\n2. Search" << endl;
+       cout << "\n3. Display" << endl;
+       cout << "\nEnter your choice:";
+       cin >> ch;
+       switch (ch) {
+           case 1: {
+               cout << "\n1.Linear probing,\n2.Quadratic Probing" << endl;
+               cout << "\nEnter your choice:";
+               cin >> probe_choice;
+               h1.insert(probe_choice);
+               break;
+           }
+           case 2: {
+               cout << "Enter the telephone number to search: ";
+               cin >> search_tel;
+               int position = h1.search(search_tel);
+               if (position != -1) {
+                   cout << "Telephone number found at position " << position << endl;
+               } else {
+                   cout << "Telephone number not found." << endl;
+               }
+               break;
+           }
+           case 3:
+               h1.display();
+               break;
+           default:
+               cout << "\nInvalid choice. Try again." << endl;
+       }
+   } while (ch != 0);
+   return 0;
+}
