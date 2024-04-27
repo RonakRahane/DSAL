@@ -1,0 +1,197 @@
+#include<iostream>
+#include<string>
+using namespace std;
+class node
+{
+   public:
+   char data;
+   node *left;
+   node *right;
+
+};
+class stack
+{
+   public:
+   node *a[20];
+   int top;
+   stack()
+   {
+       top=-1;
+   }
+   void push(node *temp)
+   {
+       if(!isfull())
+       {
+           a[++top]=temp;
+       }
+       else
+       {
+           cout<<"stack is full";
+       }      
+   }
+   int isempty()
+   {
+       if(top==-1)
+       {
+           return(1);
+       }
+       else
+       {
+           return(0);
+       }
+      
+   }
+   int  isfull()
+   {
+       if(top==19)
+       {
+           return(1);
+       }
+       else
+       {
+           return(0);
+       }
+      
+   }
+  
+   node *pop()
+   {
+       if(!isempty())
+       {
+           return(a[top--]);
+       }
+       else
+       {
+           cout<<"stack is full";
+       }      
+   } +-
+  
+  
+};
+
+class Expression_tree
+{
+   public :
+   node *root;
+   Expression_tree()
+   {
+       root=NULL;
+  
+   }
+   void create_expression_tree();
+   void prefix(node *temp);
+   void postfix(node *temp);
+   void infix(node *temp);
+   void del(node *temp);
+
+};
+void Expression_tree :: create_expression_tree()
+{
+  
+   int i;
+   char ch;
+   node *new_node,*temp;
+   string str;
+   stack s;
+  
+  
+   cout<<"Enter the prefix Expression "<<endl;
+   cin>>str;
+
+   for(i=(str.length()-1);i>=0;i--)
+   {
+       ch=str[i];
+       new_node=new node();
+       new_node->data=ch;
+       new_node->left=NULL;
+       new_node->right=NULL;
+      
+      
+       if((ch>='A'&&ch<='Z')||(ch>='a'&&ch<='z'))
+       {
+           s.push(new_node);
+      
+       }
+       else
+       {
+      
+           temp=s.pop();
+           new_node->left=temp;
+           temp=s.pop();
+           new_node->right=temp;
+           s.push(new_node);
+      
+       }
+
+   }
+   root=s.pop();
+}
+void Expression_tree :: prefix(node *temp)
+{
+       if(temp!=NULL)
+       {
+           cout<<""<<temp->data;
+           prefix(temp->left);
+           prefix(temp->right);
+      
+      
+       }
+}
+void Expression_tree :: infix(node *temp)
+{
+       if(temp!=NULL)
+       {
+           infix(temp->left);
+           cout<<""<<temp->data;
+           infix(temp->right);
+      
+      }
+}
+void Expression_tree :: postfix(node *temp)
+{
+       if(temp!=NULL)
+       {
+           postfix(temp->left);
+           postfix(temp->right);
+           cout<<""<<temp->data;
+      
+       }
+}
+void Expression_tree:: del(node *temp)
+{
+   int cnt=0;
+   //temp = root;
+   if(temp==NULL)
+   {
+       return;
+   }
+   else
+   {
+       del(temp->left);
+       del(temp->right);
+       cout<<"deleting node....  : "<<temp->data<<endl;
+       cnt++;
+       free(temp);
+   }
+}
+int main()
+{
+   Expression_tree t;
+   cout<<"\n Non Recursive :"<<endl;  
+   t.create_expression_tree();
+   cout<<"\n prefix expression : ";
+   t.prefix(t.root);
+
+   cout<<" \ninfix expression     : ";
+   t.infix(t.root);
+   cout<<endl;
+
+   cout<<" postfix expression      :";
+   t.postfix(t.root);
+   cout<<endl;
+
+   //cout<<"delete nodes";
+   t.del(t.root);
+   return 0;
+  
+}
