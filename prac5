@@ -1,0 +1,198 @@
+#include<iostream>
+using namespace std;
+
+class node
+{
+  public:
+   int data;
+   node *left;
+   node *right;
+   int lbit,rbit;
+};
+class TBT
+{
+    node *root,*head,*temp,*new_node;
+      public:
+    TBT()
+    {
+        root=NULL;
+        head = NULL;
+    }
+    void preorder();
+    void inorder();
+    void create_TBT();
+};
+void TBT::create_TBT()
+{
+   int flag=0;
+   char ans;
+   node *temp,*new_node;
+   //creating head node
+   head = new node();
+   head->data = -999;
+   head->left = head;
+   head->right = head;
+   head->lbit = 0;
+   head->rbit = 0;
+   //creating root node
+   root = new node();
+   cout<<"Enter root node: ";
+   cin>>root->data;
+   head->left=root;
+   head->lbit=1;
+   root->left = head;
+   root->right = head;
+   root->lbit= 0;
+   root->rbit = 0;
+ 
+   do
+   {
+      //creating new node
+       new_node= new node();
+       cout<<"Enter the node value: ";
+       cin>>new_node->data;
+       new_node->lbit = 0;
+       new_node->rbit =0;
+
+       temp = root;
+       flag = 0;
+while(flag==0)
+{
+          if(new_node->data < temp->data)
+          {
+              if(temp->lbit==0)
+              {
+                 new_node->left= temp->left;
+                 temp->left = new_node;
+                 temp->lbit=1;
+                 new_node->right=temp;
+                 flag =1;
+              }
+              else
+              {
+                  temp = temp->left;
+              }
+          }
+          else if(new_node->data > temp->data)
+          {
+             if(temp->rbit==0)
+             {
+          new_node->right= temp->right;
+          temp->right = new_node;
+          temp->rbit=1;
+          new_node->left=temp;
+          flag =1;
+             }
+             else
+             {
+                   temp = temp->right;
+             }
+          }
+          else
+          {
+              cout<<"Data already exist.....!!!";
+          }
+ }
+ cout<<"Do you want to continue:";
+ cin>>ans;
+   }while(ans=='Y' || ans=='y');     
+}
+void TBT::inorder()
+{
+     node *temp;
+     temp = root;
+   int flag =0;
+     if(root ==NULL)
+       {
+           cout<<"Tree is empty...!";
+       }
+else
+{
+while(temp!= head)
+{
+if(temp->lbit==1 && flag==0)
+{
+    temp = temp->left;
+}
+else
+{
+      cout<<" "<<temp->data;
+   if(temp->rbit==1)
+   {
+       temp=temp->right;
+       flag = 0;
+   }
+   else
+   {
+     temp= temp->right;
+     flag =1;
+   }
+}
+ }
+}
+}
+void TBT::preorder()
+{
+       node *temp;
+       temp = root;
+       int flag =0;
+       if(root ==NULL)
+{
+   cout<<"Tree is empty...!";
+}
+else
+{
+   while(temp!= head)
+{
+      if(flag==0)
+{
+       cout<<" "<<temp->data;
+}
+if(temp->lbit==1 && flag==0)
+{
+    temp = temp->left;
+}
+else
+{
+   if(temp->rbit==1)
+   {
+       temp=temp->right;
+        flag = 0;
+   }
+   else
+   {
+       temp= temp->right;
+       flag =1;
+   }
+}
+ }
+}
+}
+int main()
+{
+   TBT t;
+  int choice;
+  do
+  {
+       cout<<"\n1.Insert element \n";
+       cout<<"2.Display inorder \n";
+       cout<<"3.Display preorder \n";
+       cout<<"4.Exit \n";
+       cout<<"\nEnter your choice:";
+       cin>>choice;
+    switch(choice)
+    {
+        case 1:  t.create_TBT();
+                  break;
+        case 2: cout<<"Inorder is: ";
+                           t.inorder();
+                 break;
+        case 3: cout<<"Preorder is: ";
+                           t.preorder();
+                 break;
+        case 4: cout<<"Exit";
+                 break;
+    }
+  }while(choice!=4);
+ 
+}
